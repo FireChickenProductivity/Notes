@@ -1,3 +1,5 @@
+# This file loads in the notes from the appropriate directory and provides access to the notes data structure
+
 from talon import Module, actions, app, settings, fs
 
 import os
@@ -128,4 +130,7 @@ app.register("ready", on_ready)
 
 @module.action_class
 class Actions:
-	pass
+	def notes_get() -> dict[str, Note]:
+		"""Returns the notes data structure"""
+		global NOTES
+		return NOTES
