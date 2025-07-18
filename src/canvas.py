@@ -79,9 +79,9 @@ class Display:
 		outline_rectangle = Rect(self.left - 1, self.top - 1, right - self.left + 2, bottom - self.top + 2)
 
 		canvas.paint.color = settings.get('user.chicken_notes_foreground_color')
-		canvas.draw_rect(backround_rectangle)
-		canvas.paint.color = settings.get('user.chicken_notes_background_color')
 		canvas.draw_rect(outline_rectangle)
+		canvas.paint.color = settings.get('user.chicken_notes_background_color')
+		canvas.draw_rect(backround_rectangle)
 		canvas.paint.color = settings.get('user.chicken_notes_foreground_color')
 		y = self.top + 0.5*text_size
 		for item in self.items.get_items():
