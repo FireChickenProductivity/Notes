@@ -12,6 +12,7 @@ class Note:
 NAME_PREFIX = "name:"
 TAG_PREFIX = "tag:"
 LINK_PREFIX = "link:"
+FILE_EXTENSION = ".txt"
 
 class InvalidNoteException(Exception):
 	pass
@@ -55,11 +56,18 @@ def parse_body(file_name: str, lines: list[str], body_index: int):
 	body = "\n".join(lines[body_index + 1:])
 	return body
 
-def parse_note(file_name: str, text: str):
+def compute_text_before_postfix(text: str, postfix: str):
+	if not text.endswith(postfix):
+		raise ValueError(f"Tried to compute text before postfix with the postfix {postfix} missing from {text}")
+	return text[:len(text) - len(postfix)]
+
+def parse_note(path: str, file_name: str,  text: str):
 	body: str = ""
 	lines = text.split("\n")
-	name, tags, links, body_index = parse_header(file_name, lines)
-	body = parse_body(file_name, lines, body_index)
+	name, tags, links, body_index = parse_header(path, lines)
+	if not name:
+		name = compute_text_before_postfix(file_name, FILE_EXTENSION)
+	body = parse_body(path, lines, body_index)
 	return Note(name, body, tags, links)
 
 
@@ -68,10 +76,10 @@ def load_notes(directory: str):
 	errors = []
 	for name in os.listdir(directory):
 		path = os.path.join(directory, name)
-		if name.endswith(".txt") and os.path.isfile(path):
+		if name.endswith(FILE_EXTENSION) and os.path.isfile(path):
 			try:
 				with open(path, "r") as f:
-					note = parse_note(name, f.read())
+					note = parse_note(path, name, f.read())
 					if note.name in notes:
 						errors.append(InvalidNoteException(f"More than one note has the name {note.name}! Duplicate found at {path}."))
 					else:
