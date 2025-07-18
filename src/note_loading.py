@@ -1,4 +1,4 @@
-from talon import Module, actions, app
+from talon import Module, actions, app, settings
 
 import os
 
@@ -80,6 +80,7 @@ def load_notes(directory: str):
 				errors.append(e)
 	return notes, errors
 
+
 module = Module()
 module.setting(
 	'notes_directory',
@@ -87,4 +88,19 @@ module.setting(
 	default = "",
 	desc = "The directory to load notes from"
 )
-print("loaded")
+
+DEFAULT_NOTES_DIRECTORY: str
+NOTES: dict[str, Note]
+
+def get_directory():
+	directory_setting = settings.get("user.notes_directory")
+	return directory_setting if directory_setting else DEFAULT_NOTES_DIRECTORY
+
+def on_ready():
+	global DEFAULT_NOTES_DIRECTORY
+	DEFAULT_NOTES_DIRECTORY = os.path.join(actions.path.talon_user(), "note_files")
+	directory_path = get_directory()
+	if not os.path.exists(directory_path):
+		os.mkdir(directory_path)
+	NOTES, errors = load_notes(directory_path)
+app.register("ready", on_ready)
