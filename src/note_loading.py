@@ -1,4 +1,4 @@
-from talon import Module, actions, app, settings
+from talon import Module, actions, app, settings, fs
 
 import os
 
@@ -101,15 +101,20 @@ def warn_about_errors(errors):
 	for e in errors:
 		print(e)
 
+def load_notes_on_change_or_startup(path):
+	global NOTES
+	NOTES, errors = load_notes(path)
+	if errors:
+		warn_about_errors(errors)
+
 def on_ready():
 	global DEFAULT_NOTES_DIRECTORY
 	DEFAULT_NOTES_DIRECTORY = os.path.join(actions.path.talon_user(), "note_files")
 	directory_path = get_directory()
 	if not os.path.exists(directory_path):
 		os.mkdir(directory_path)
-	NOTES, errors = load_notes(directory_path)
-	if errors:
-		warn_about_errors(errors)
+	load_notes_on_change_or_startup(directory_path)
+	fs.watch(directory_path, lambda a, b: load_notes_on_change_or_startup(directory_path))
 
 app.register("ready", on_ready)
 
