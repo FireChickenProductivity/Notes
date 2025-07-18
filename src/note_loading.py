@@ -1,4 +1,6 @@
-from talon import Module, actions
+from talon import Module, actions, app
+
+import os
 
 class Note:
 	def __init__(self, name: str, body: str, tags: list[str], links: list[str]):
@@ -24,14 +26,11 @@ def get_prefix_value(value_name: str, prefix: str, index: int, file_name, line: 
 	if value == "":
 		raise create_value_missing_exception(value_name, index, file_name)
 	return value
-	
 
-def parse_note(file_name: str, text: str):
+def parse_header(file_name: str, lines: list[str]):
 	name: str = ""
 	tags: list[str] = []
 	links: list[str] = []
-	body: str = ""
-	lines = text.split("\n")
 	index = 0
 	while index < len(lines) and lines[index].strip() != "-":
 		line = lines[index].strip()
@@ -45,9 +44,47 @@ def parse_note(file_name: str, text: str):
 			links.append(
 				get_prefix_value("link", LINK_PREFIX, index, file_name, line)
 			)
+		elif len(line) > 0:
+			raise InvalidNoteException(f"Could not parse line {index + 1} in the header of note {file_name}")
 		index += 1
-	if index >= len(lines) - 1:
+	return name, tags, links, index
+
+def parse_body(file_name: str, lines: list[str], body_index: int):
+	if body_index >= len(lines) - 1:
 		raise InvalidNoteException(f"Note missing body: {file_name}")
-	body = "\n".join(lines[index + 1:])
+	body = "\n".join(lines[body_index + 1:])
+	return body
+
+def parse_note(file_name: str, text: str):
+	body: str = ""
+	lines = text.split("\n")
+	name, tags, links, body_index = parse_header(file_name, lines)
+	body = parse_body(file_name, lines, body_index)
 	return Note(name, body, tags, links)
-		
+
+
+def load_notes(directory: str):
+	notes = {}
+	errors = []
+	for name in os.listdir(directory):
+		path = os.path.join(directory, name)
+		if name.endswith(".txt") and os.path.isfile(path):
+			try:
+				with open(path, "r") as f:
+					note = parse_note(name, f.read())
+					if note.name in notes:
+						errors.append(InvalidNoteException(f"More than one note has the name {note.name}! Duplicate found at {path}."))
+					else:
+						notes[note.name] = note
+			except InvalidNoteException as e:
+				errors.append(e)
+	return notes, errors
+
+module = Module()
+module.setting(
+	'notes_directory',
+	type = str,
+	default = "",
+	desc = "The directory to load notes from"
+)
+print("loaded")
