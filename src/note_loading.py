@@ -93,7 +93,7 @@ def load_notes(directory: str):
 
 module = Module()
 module.setting(
-	'notes_directory',
+	'chicken_notes_directory',
 	type = str,
 	default = "",
 	desc = "The directory to load notes from"
@@ -103,7 +103,7 @@ DEFAULT_NOTES_DIRECTORY: str
 NOTES: dict[str, Note]
 
 def get_directory():
-	directory_setting = settings.get("user.notes_directory")
+	directory_setting = settings.get("user.chicken_notes_directory")
 	return directory_setting if directory_setting else DEFAULT_NOTES_DIRECTORY
 
 def warn_about_errors(errors):
@@ -130,7 +130,7 @@ app.register("ready", on_ready)
 
 @module.action_class
 class Actions:
-	def notes_get() -> dict[str, Note]:
+	def chicken_notes_get() -> dict[str, Note]:
 		"""Returns the notes data structure"""
 		global NOTES
 		return NOTES
