@@ -96,6 +96,11 @@ def get_directory():
 	directory_setting = settings.get("user.notes_directory")
 	return directory_setting if directory_setting else DEFAULT_NOTES_DIRECTORY
 
+def warn_about_errors(errors):
+	app.notify("There were errors loading notes. See the log for details.")
+	for e in errors:
+		print(e)
+
 def on_ready():
 	global DEFAULT_NOTES_DIRECTORY
 	DEFAULT_NOTES_DIRECTORY = os.path.join(actions.path.talon_user(), "note_files")
@@ -103,4 +108,11 @@ def on_ready():
 	if not os.path.exists(directory_path):
 		os.mkdir(directory_path)
 	NOTES, errors = load_notes(directory_path)
+	if errors:
+		warn_about_errors(errors)
+
 app.register("ready", on_ready)
+
+@module.action_class
+class Actions:
+	pass
