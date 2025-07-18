@@ -29,3 +29,13 @@ class Actions:
 		note = get_note(name)
 		current_note = note
 		actions.user.chicken_notes_display(note)
+
+	def chicken_notes_expand():
+		"""Expands the current chicken note"""
+		if current_note:
+			actions.user.chicken_notes_display(current_note)
+	
+	def chicken_notes_collapse():
+		"""Collapses the current chicken note"""
+		if current_note:
+			actions.user.chicken_notes_display_brief(current_note)
