@@ -6,6 +6,7 @@ from .note_loading import Note
 from .canvas import Display, Items
 
 from pathlib import Path
+import math
 
 def compute_first_line(text: str):
 	first_line = ""
@@ -17,7 +18,7 @@ def compute_first_line(text: str):
 	return first_line
 
 canvas: Display = Display()
-POSITION_FILE_NAME = "display_position.txt"
+POSITION_FILE_NAME: str = "display_position.txt"
 
 def compute_position_file_path():
 	return Path(__file__).parents[0] / POSITION_FILE_NAME
@@ -31,31 +32,59 @@ module.setting(
 	desc = "The maximum number of characters to put on a single line. Make this 0 for no limit."
 )
 
+module.setting(
+	'chicken_notes_page_size',
+	type = int,
+	default = 10,
+	desc = "The number of lines to show on each page. Make this 0 for no limit."
+)
+
 def compute_wrapped_lines(lines: list[str], max_line_length: int):
+	result = []
 	for line in lines:
 		if max_line_length <= 0 or len(line) < max_line_length:
-			yield line
+			result.append(line)
 		else:
 			start = 0
 			while start < len(line):
-				yield (line[start:start+max_line_length])
+				result.append(line[start:start+max_line_length])
 				start += max_line_length
+	return result
 
 def add_wrapped_lines(items: Items, lines: list[str], max_line_length: int):
 	wrapped_lines = compute_wrapped_lines(lines, max_line_length)
 	for line in wrapped_lines:
 		items.text(line)
+
+def add_page(items: Items, lines: list[str], page_size: int, page: int):
+	if page_size <= 0 or page_size >= len(lines):
+		for line in lines:
+			items.text(line)
+	else:
+		number_of_pages = math.ceil(len(lines)/page_size)
+		if page < 1 or page > number_of_pages:
+			raise ValueError(f"You tried to access invalid page {page}")
+		start = (page - 1)*page_size
+		end = min(start + page_size, len(lines))
+		page_lines = lines[start:end]
+		page_number_text = f"page {page}/{number_of_pages}"
+		items.text(page_number_text)
+		items.line()
+		for page_line in page_lines:
+			items.text(page_line)
 	
+
 @module.action_class
 class Actions:
-	def chicken_notes_display(note: Note):
+	def chicken_notes_display(note: Note, page: int=1):
 		"""Displays the specified note"""
 		max_line_length = settings.get('user.chicken_notes_max_line_length')
 
 		items = Items()
 		add_wrapped_lines(items, [note.name], max_line_length)
 		items.line()
-		add_wrapped_lines(items, note.body.split("\n"), max_line_length)
+		body = compute_wrapped_lines(note.body.split("\n"), max_line_length)
+		add_page(items, body, settings.get('user.chicken_notes_page_size'), page)
 
 		canvas.update(items)
 		canvas.refresh()
