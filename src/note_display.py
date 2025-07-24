@@ -1,6 +1,6 @@
 # This file provides logic for displaying notes to be used by note displaying commands and actions
 
-from talon import Module, actions, app
+from talon import Module, actions, app, settings
 
 from .note_loading import Note
 from .canvas import Display, Items
@@ -23,15 +23,33 @@ def compute_position_file_path():
 	return Path(__file__).parents[0] / POSITION_FILE_NAME
 
 module = Module()
+
+module.setting(
+	'chicken_notes_max_line_length',
+	type = int,
+	default = 100,
+	desc = "The maximum number of characters to put on a single line. Make this 0 for no limit."
+)
+
 @module.action_class
 class Actions:
 	def chicken_notes_display(note: Note):
 		"""Displays the specified note"""
+		max_line_length = settings.get('user.chicken_notes_max_line_length')
+
 		items = Items()
 		items.text(note.name)
 		items.line()
+		
 		for line in note.body.split("\n"):
-			items.text(line)
+			if max_line_length <= 0 or len(line) < max_line_length:
+				items.text(line)
+			else:
+				start = 0
+				while start < len(line):
+					items.text(line[start:start+max_line_length])
+					start += max_line_length
+				
 		canvas.update(items)
 		canvas.refresh()
 
@@ -40,6 +58,11 @@ class Actions:
 		first_line = compute_first_line(note.body)
 		text = f"Note: {note.name}\n{first_line}"
 		items = Items()
+		
+		max_line_length = settings.get('user.chicken_notes_max_line_length')
+		if max_line_length > 0 and len(text) > max_line_length:
+			text = text[:max_line_length]
+			
 		items.text(text)
 		canvas.update(items)
 		canvas.refresh()
