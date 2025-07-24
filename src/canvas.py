@@ -1,10 +1,7 @@
 # This file provides graphical display logic
 
-from talon import canvas, ui, skia, Module, settings
+from talon import canvas, ui, Module, settings
 from talon.skia import Paint, Rect
-
-from .note_loading import Note
-
 
 module = Module()
 
