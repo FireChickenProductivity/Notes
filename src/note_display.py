@@ -31,6 +31,21 @@ module.setting(
 	desc = "The maximum number of characters to put on a single line. Make this 0 for no limit."
 )
 
+def compute_wrapped_lines(lines: list[str], max_line_length: int):
+	for line in lines:
+		if max_line_length <= 0 or len(line) < max_line_length:
+			yield line
+		else:
+			start = 0
+			while start < len(line):
+				yield (line[start:start+max_line_length])
+				start += max_line_length
+
+def add_wrapped_lines(items: Items, lines: list[str], max_line_length: int):
+	wrapped_lines = compute_wrapped_lines(lines, max_line_length)
+	for line in wrapped_lines:
+		items.text(line)
+	
 @module.action_class
 class Actions:
 	def chicken_notes_display(note: Note):
@@ -38,18 +53,10 @@ class Actions:
 		max_line_length = settings.get('user.chicken_notes_max_line_length')
 
 		items = Items()
-		items.text(note.name)
+		add_wrapped_lines(items, [note.name], max_line_length)
 		items.line()
-		
-		for line in note.body.split("\n"):
-			if max_line_length <= 0 or len(line) < max_line_length:
-				items.text(line)
-			else:
-				start = 0
-				while start < len(line):
-					items.text(line[start:start+max_line_length])
-					start += max_line_length
-				
+		add_wrapped_lines(items, note.body.split("\n"), max_line_length)
+
 		canvas.update(items)
 		canvas.refresh()
 
