@@ -72,7 +72,12 @@ def add_page(items: Items, lines: list[str], page_size: int, page: int):
 		items.line()
 		for page_line in page_lines:
 			items.text(page_line)
-	
+
+def add_links(items: Items, note: Note):
+	if note.links:
+		items.line()
+	for i, l in enumerate(note.links):
+		items.text(f"{i + 1}: {l}")
 
 @module.action_class
 class Actions:
@@ -85,6 +90,7 @@ class Actions:
 		items.line()
 		body = compute_wrapped_lines(note.body.split("\n"), max_line_length)
 		add_page(items, body, settings.get('user.chicken_notes_page_size'), page)
+		add_links(items, note)
 
 		canvas.update(items)
 		canvas.refresh()

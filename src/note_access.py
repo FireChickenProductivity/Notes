@@ -1,6 +1,6 @@
 # This file contains commands for accessing notes by name or metadata
 
-from talon import Module, actions
+from talon import Module, actions, clip
 
 from .note_loading import Note
 
@@ -64,3 +64,21 @@ class Actions:
 			page = current_page - 1
 			actions.user.chicken_notes_display(current_note, page)
 			current_page = page
+
+	def chicken_notes_get_link(number: int) -> str:
+		"""Retrieves the specified link from the current note"""
+		if not current_note:
+			raise TypeError(f"There is currently no note selected")
+		if number < 1 or number > len(current_note.links):
+			raise ValueError(f"Received invalid link number {number}")
+		return current_note.links[number - 1]
+
+	def chicken_notes_copy_link(number: int):
+		"""Copies the specified link to the clipboard"""
+		link = actions.user.chicken_notes_get_link(number)
+		clip.set_text(link)
+
+	def chicken_notes_open_link(number: int):
+		"""Opens the specified link"""
+		link = actions.user.chicken_notes_get_link(number)
+		actions.user.open_url(link)
