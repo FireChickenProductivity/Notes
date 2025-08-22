@@ -1,6 +1,6 @@
 # This file loads in the notes from the appropriate directory and provides access to the notes data structure
 
-from talon import Module, actions, app, settings, fs
+from talon import Module, Context, actions, app, settings, fs
 
 import os
 
@@ -92,12 +92,20 @@ def load_notes(directory: str):
 
 
 module = Module()
+
 module.setting(
 	'chicken_notes_directory',
 	type = str,
 	default = "",
 	desc = "The directory to load notes from"
 )
+
+module.list(
+	'chicken_notes_tag_name',
+	desc = "Loaded chicken note tags",
+)
+
+context = Context()
 
 DEFAULT_NOTES_DIRECTORY: str
 NOTES: dict[str, Note]
@@ -111,11 +119,21 @@ def warn_about_errors(errors):
 	for e in errors:
 		print(e)
 
+def update_tags(notes):
+	global context
+	tags_list = {}
+	for n in notes.values():
+		for t in n.tags:
+			tags_list[t] = t
+	if tags_list:
+		context.lists["user.chicken_notes_tag_name"] = tags_list
+
 def load_notes_on_change_or_startup(path):
 	global NOTES
 	NOTES, errors = load_notes(path)
 	if errors:
 		warn_about_errors(errors)
+	update_tags(NOTES)
 
 def on_ready():
 	global DEFAULT_NOTES_DIRECTORY
