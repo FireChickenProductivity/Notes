@@ -105,6 +105,11 @@ module.list(
 	desc = "Loaded chicken note tags",
 )
 
+module.list(
+	'chicken_notes_note_name',
+	desc = "Loaded chicken note names"
+)
+
 context = Context()
 
 DEFAULT_NOTES_DIRECTORY: str
@@ -128,12 +133,19 @@ def update_tags(notes):
 	if tags_list:
 		context.lists["user.chicken_notes_tag_name"] = tags_list
 
+def update_names(notes):
+	global context
+	name_list = {n: n for n in notes}
+	if name_list:
+		context.lists["user.chicken_notes_note_name"] = name_list
+
 def load_notes_on_change_or_startup(path):
 	global NOTES
 	NOTES, errors = load_notes(path)
 	if errors:
 		warn_about_errors(errors)
 	update_tags(NOTES)
+	update_names(NOTES)
 
 def on_ready():
 	global DEFAULT_NOTES_DIRECTORY
