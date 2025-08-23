@@ -4,6 +4,7 @@ from talon import Module, actions, app, settings
 
 from .note_loading import Note
 from .canvas import Display, Items
+from .searching import Search
 
 from pathlib import Path
 import math
@@ -106,6 +107,23 @@ class Actions:
 			text = text[:max_line_length]
 			
 		items.text(text)
+		canvas.update(items)
+		canvas.refresh()
+
+	def chicken_notes_display_search(search: Search, notes: dict[str, Note], page: int=1):
+		"""Displays the chicken notes search results"""
+		max_line_length = settings.get('user.chicken_notes_max_line_length')
+
+		title = f"tags: {",".join(search.tags)} | keywords: {",".join(search.keywords)}"
+		result_text = []
+		for n in notes:
+			result_text.append(n)
+			result_text.append("\t" + compute_first_line(notes[n].body))
+		items = Items()
+		add_wrapped_lines(items, [title], max_line_length)
+		items.line()
+		add_page(items, result_text, settings.get('user.chicken_notes_page_size'), page)
+
 		canvas.update(items)
 		canvas.refresh()
 

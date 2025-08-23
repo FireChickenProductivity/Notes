@@ -9,4 +9,4 @@ note page (last|previous): user.chicken_notes_go_to_previous_page()
 note copy link <number>: user.chicken_notes_copy_link(number)
 note open link <number>: user.chicken_notes_open_link(number)
 note tag search {user.chicken_notes_tag_name}:
-	print(user.chicken_notes_tag_name)
+	user.chicken_notes_perform_tag_search(chicken_notes_tag_name)
