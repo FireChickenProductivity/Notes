@@ -17,6 +17,18 @@ search: Search | None = None
 search_results: dict | None = None
 is_search_focused: bool = False
 
+def is_something_pageable_showing():
+	return (current_note and is_search_focused is not None) or (is_search_focused and search_results is not None)
+
+def display_updated_page(new_page_number: int):
+	global current_page
+	if not is_search_focused and current_note:
+		actions.user.chicken_notes_display(current_note, new_page_number)
+		current_page = new_page_number
+	elif is_search_focused and search_results:
+		actions.user.chicken_notes_display_search(search, search_results, new_page_number)
+		current_page = new_page_number
+
 module = Module()
 @module.action_class
 class Actions:
@@ -53,26 +65,20 @@ class Actions:
 
 	def chicken_notes_go_to_page(number: int):
 		"""Opens the specified chicken notes page for the currently expanded note"""
-		if current_note:
-			global current_page
-			actions.user.chicken_notes_display(current_note, number)
-			current_page = number
+		if is_something_pageable_showing():
+			display_updated_page(number)
 
 	def chicken_notes_go_to_next_page():
 		"""Opens the next chicken notes page"""
-		if current_note:
-			global current_page
+		if is_something_pageable_showing():
 			page = current_page + 1
-			actions.user.chicken_notes_display(current_note, page)
-			current_page = page
+			display_updated_page(page)
 
 	def chicken_notes_go_to_previous_page():
 		"""Opens the previous chicken notes page"""
-		if current_note:
-			global current_page
+		if is_something_pageable_showing():
 			page = current_page - 1
-			actions.user.chicken_notes_display(current_note, page)
-			current_page = page
+			display_updated_page(page)
 
 	def chicken_notes_get_link(number: int) -> str:
 		"""Retrieves the specified link from the current note"""
