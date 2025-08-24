@@ -113,7 +113,7 @@ class Actions:
 	def chicken_notes_display_search(search: Search, notes: dict[str, Note], page: int=1):
 		"""Displays the chicken notes search results"""
 		max_line_length = settings.get('user.chicken_notes_max_line_length')
-		title = f"tags: {",".join(search.tags)} | keywords: {",".join(search.keywords)}"
+		title = f"tags: {",".join(search.tags)}"
 		result_text = []
 		for n in notes:
 			result_text.append(n)

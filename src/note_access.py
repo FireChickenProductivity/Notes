@@ -103,7 +103,7 @@ class Actions:
 	def chicken_notes_perform_tag_search(tag: str):
 		"""Searches for chicken notes with the tag"""
 		global search, search_results, is_search_focused, current_page
-		search = Search([tag], [])
+		search = Search([tag])
 		search_results = find_notes_matching_search(search)
 		is_search_focused = True
 		current_page = 1

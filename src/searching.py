@@ -4,9 +4,8 @@ from talon import actions
 from .note_loading import Note
 
 class Search:
-	def __init__(self, tags: list[str], keywords: list[str]):
+	def __init__(self, tags: list[str]):
 		self.tags = tags
-		self.keywords = keywords
 
 def does_note_have_every_tag(note: Note, tags: set[str]):
 	matching_tags = 0
