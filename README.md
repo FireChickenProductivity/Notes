@@ -65,6 +65,19 @@ If you make a mistake when defining a note file, an error will be output in the 
 
 `user.chicken_notes_display_by_name` takes the name of the note as an argument and displays the full note.
 
+# Settings
+`user.'chicken_notes_max_line_length` is the maximum number of characters to display on a line. Make this 0 for no limit.
+
+`user.chicken_notes_page_size` is the number of lines to show on each page. Make this 0 for no limit.
+
+`user.chicken_notes_directory` is the directory to put the notes in. Changing this requires restarting talon or reloading this extension's python modules.
+
+`user.chicken_notes_display_scale` is a floating point value that can be used to change the size of the display.
+
+`user.chicken_notes_background_color` determines the display background color.
+
+`user.chicken_notes_foreground_color` determines the display foreground color for the lines and text. 
+
 # Dependencies
 Chicken Notes depends on the following community actions:
 
