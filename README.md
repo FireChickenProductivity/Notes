@@ -2,7 +2,7 @@
 This talon extension allows displaying notes through actions and commands. This can be useful for quickly looking things up and for having commands display relevant information, such as a voice command for defining an integer in C++ displaying a note on how many bytes an integer is. 
 
 # Creating Notes
-By default, compatible notes must be stored in the `note_files` subdirectory of the talon user directory. You can alternatively set the `chicken_notes_directory` setting to another directory path and then restart talon to use that instead. 
+By default, compatible notes must be stored in the `note_files` subdirectory of the talon user directory. You can alternatively set the `user.chicken_notes_directory` setting to another directory path and then restart talon to use that instead. 
 
 Notes should be stored as `.txt` files with the following format:
 
