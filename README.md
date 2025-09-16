@@ -61,7 +61,9 @@ If you make a mistake when defining a note file, an error will be output in the 
 `note page (last|previous)` go back a page.
 
 # Actions
+`user.chicken_notes_display_brief_by_name` takes the name of the note as an argument and displays the text from the first line of the note up to the maximum line length.
 
+`user.chicken_notes_display_by_name` takes the name of the note as an argument and displays the full note.
 
 # Dependencies
 Chicken Notes depends on the following community actions:
