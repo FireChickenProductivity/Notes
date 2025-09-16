@@ -9,7 +9,7 @@ Notes should be stored as `.txt` files with the following format:
 ```
 name: (name goes here. This is how you refer to the note)
 tag: (Optionally, a tag name goes here. Tag names are used when searching your notes.)
-link: (Optionally, a link can go here for webpages you want to be able to reference quickly.)
+link: (Optionally, a link can go here for a relevant webpage)
 -
 Note text can go here.
 The rest of the document is just notes. 
@@ -22,7 +22,10 @@ tag: C plus plus
 link: https://en.cppreference.com/w/cpp/language/types.html
 -
 int, short >= 2 bytes, long >= 4, long long >= 8
-Processors cannot do arithmetic operations on types that are too small. int as defined as the smallest type on the processor that it can do operations on. Smaller types are implicitly converted to int for computations. auto will consequently give int in those situations. 
+Processors cannot do arithmetic operations on types that are too small.
+int as defined as the smallest type on the processor that it can do operations on.
+Smaller types are implicitly converted to int for computations.
+auto will consequently give int in those situations. 
 ```
 
 Multiple tags and links go on separate lines prefixed with `tag: ` or `link: ` respectively.
