@@ -9,7 +9,7 @@ Notes should be stored as `.txt` files with the following format:
 ```
 name: (name goes here. This is how you refer to the note)
 tag: (Optionally, a tag name goes here. Tag names are used when searching your notes.)
-link: (Optionally, a link can go here for a relevant webpage)
+link: (Optionally, a link can go here for a relevant webpage.)
 -
 Note text can go here.
 The rest of the document is just notes. 
