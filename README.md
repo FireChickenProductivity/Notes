@@ -31,21 +31,33 @@ If you make a mistake when defining a note file, an error will be output in the 
 
 # Commands
 ## Managing the Display
+
 `note show` allows seeing the current note. The display has to be turned on to see anything even if you use an action for showing a note.
+
 `note hide` hides the display.
+
 `note move` moves the display to the current cursor position.
 
 ## Using Notes
+
 `note pick {user.chicken_notes_note_name}` shows the specified note.
+
 `note expand` shows the full current note.
+
 `note collapse` has the note only show text from the first line up to the maximum line length. 
+
 `note tag search {user.chicken_notes_tag_name}` shows the notes with the specified tag name. 
+
 `note copy link <number>` copies the link with the specified number.
+
 `note open link <number>` opens the link with the specified number.
 
 ## Page Navigation
+
 `note page <number>` go to the specified page number.
+
 `note page next` advance the page number.
+
 `note page (last|previous)` go back a page.
 
 # Actions
