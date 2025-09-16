@@ -69,7 +69,7 @@ If you make a mistake when defining a note file, an error will be output in the 
 `user.chicken_notes_display_by_name` takes the name of the note as an argument and displays the full note.
 
 # Settings
-`user.'chicken_notes_max_line_length` is the maximum number of characters to display on a line. Make this 0 for no limit.
+`user.chicken_notes_max_line_length` is the maximum number of characters to display on a line. Make this 0 for no limit.
 
 `user.chicken_notes_page_size` is the number of lines to show on each page. Make this 0 for no limit.
 
@@ -84,5 +84,5 @@ If you make a mistake when defining a note file, an error will be output in the 
 # Dependencies
 Chicken Notes depends on the following community actions:
 
-user.open_url for opening links
+`user.open_url` for opening links
 
